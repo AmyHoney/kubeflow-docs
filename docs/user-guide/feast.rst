@@ -30,6 +30,8 @@ Prerequisites
 Getting started with Feast
 ==========================
 
+*You can run Feast module in Jupyter Notebook*
+
 This guide provides the necessary resources to install Feast alongside Kubeflow, describes the usage of Feast with Kubeflow components, and provides examples that users can follow to test their setup.
 
 Grab the `code examples <https://github.com/AmyHoney/feast-example/blob/master/03_feature_repo_s3_offline_sqlite_online/s3_online_explore_date.ipynb>`_ to know feast and use it: 
@@ -43,14 +45,17 @@ Grab the `code examples <https://github.com/AmyHoney/feast-example/blob/master/0
 Installing Feast
 ----------------
 
-Before we get started, first install Feast and others' dependencies:
+Before we get started, first install some dependencies and Feast:
 
 .. code-block:: shell
 
-    pip install feast==0.29.0
     pip install scikit-learn
+    pip install "numpy>=1.16.5,<1.23.0"
+    pip install pyarrow
+    pip install fastparquet
     pip install boto3
     pip install s3fs
+    pip install feast==0.29.0
 
 
 ------------------
@@ -96,11 +101,11 @@ Secondly update the MinIO parameters on your environment, create a bucket for fe
 
     # Update these parameters about your environment
     os.environ["FEAST_S3_ENDPOINT_URL"] = "http://minio.kubeflow:9000"
-    os.environ["AWS_ACCESS_KEY_ID"] = "minio"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "RL4YSFL8TT39BBHZO7SKNYOG6Y5TDD"
+    os.environ["AWS_ACCESS_KEY_ID"] = "<your_minio_access_key>"
+    os.environ["AWS_SECRET_ACCESS_KEY"] = "<your_minio_secret_key>"
 
     s3 = boto3.resource('s3',
-                        endpoint_url=os.getenv("MLFLOW_S3_ENDPOINT_URL"),
+                        endpoint_url=os.getenv("FEAST_S3_ENDPOINT_URL"),
                         verify=False)
 
     # Create a bucket
@@ -119,17 +124,26 @@ Secondly update the MinIO parameters on your environment, create a bucket for fe
     for obj in bucket.objects.filter(Prefix=bucket_path):
         print(obj.key)
 
-----------------------
-Setup the feature repo
-----------------------
+-------------------------------------------
+Setup the feature repo to register features
+-------------------------------------------
 
 The first thing needs to do is setup a ``feature_store.yaml`` file, and it is the primary way to configure an overall Feast project. We have setup a sample feature reposity in `03_feature_repo_s3_offline_sqlite_online <https://github.com/AmyHoney/feast-example/tree/master/03_feature_repo_s3_offline_sqlite_online>`_
+
+^^^^^^^^^^^^^^^^^^^^^^
+Setup the feature repo
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: shell
+
+    feast init <your_feast_project_name>
+  
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 Use your configured bucket
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**data_sources.py**
+Write **data_sources.py** file to load data from S3 storage
 
 .. code-block:: shell
 
@@ -140,8 +154,8 @@ Use your configured bucket
     file_name = "driver_stats.parquet"
     s3_endpoint = "http://minio.kubeflow:9000"
 
-    s3 = s3fs.S3FileSystem(key='minio',
-                        secret='RL4YSFL8TT39BBHZO7SKNYOG6Y5TDD',
+    s3 = s3fs.S3FileSystem(key='<your_minio_access_key>',
+                        secret='<your_minio_secret_key>',
                         client_kwargs={'endpoint_url': s3_endpoint}, use_ssl=False)
 
     driver_stats = FileSource(
@@ -154,7 +168,7 @@ Use your configured bucket
         owner="test2@gmail.com",
     )
 
-**feature_store.yaml**
+Update **feature_store.yaml** to use yourself's S3 storage link
 
 .. code-block:: shell
 
@@ -190,7 +204,7 @@ With the ``feature_store.yaml`` setup, you can now run ``feast plan`` to see wha
 
 .. code-block:: shell
 
-    feast plan
+    feast -c <your_feast_project_name>/feature_repo plan
 
 Sample output:
 
@@ -212,8 +226,9 @@ This will parse the feature, data source, and feature service definitions and pu
 
 .. code-block:: shell
 
-    feast apply
+    feast -c <your_feast_project_name>/feature_repo apply
 
+    # output
     02/22/2023 02:48:14 AM botocore.credentials INFO: Found credentials in environment variables.
     Created entity driver
     Created feature view driver_hourly_stats
@@ -231,8 +246,9 @@ You can now run Feast CLI commands to verify Feast knows about your features and
 
 .. code-block:: shell
 
-    feast feature-views list
+    feast -c <your_feast_project_name>/feature_repo feature-views list
 
+    # output
     02/22/2023 02:48:43 AM botocore.credentials INFO: Found credentials in environment variables.
     NAME                 ENTITIES    TYPE
     driver_hourly_stats  {'driver'}  FeatureView
@@ -336,7 +352,7 @@ First we materialize features (which generate the latest values for each entity 
 
 .. code-block:: shell
 
-    feast materialize-incremental $(date +%Y-%m-%d)
+    feast -c <your_feast_project_name>/materialize-incremental $(date +%Y-%m-%d)
 
 Now we can retrieve these materialized features from SQLite by directly using the SDK, load the trained model file before, to make prediction.
 

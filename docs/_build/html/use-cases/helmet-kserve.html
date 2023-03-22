@@ -1,0 +1,1961 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../_static/favicon.ico">
+    
+    
+      
+        <title>Model Serving with Kubeflow KServe - Kubeflow Enterprise Docs</title>
+      
+    
+    
+      
+        
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+        <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+        <link rel="stylesheet" type="text/css" href="../_static/google_fonts.css" />
+        <link rel="stylesheet" type="text/css" href="../_static/stylesheets/sphinx_immaterial_theme.e10f1df50225cf229.min.css" />
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#goal" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Kubeflow Enterprise Docs" class="md-header__button md-logo" aria-label="Kubeflow Enterprise Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kubeflow Enterprise Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Model Serving with Kubeflow KServe
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="yellow"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elements-of-ai/kubeflow-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Kubeflow Docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Kubeflow Enterprise Docs" class="md-nav__button md-logo" aria-label="Kubeflow Enterprise Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+    </a>
+    Kubeflow Enterprise Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elements-of-ai/kubeflow-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Kubeflow Docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/index.html" class="md-nav__link">
+        <span class="md-ellipsis">Overview</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/oss.html" class="md-nav__link">
+        <span class="md-ellipsis">Open Source Kubeflow Components</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/ekf.html" class="md-nav__link">
+        <span class="md-ellipsis">Kubeflow Enterprise Components and Features</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/mlops.html" class="md-nav__link">
+        <span class="md-ellipsis">MLOps with Kubeflow</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          <span class="md-ellipsis">Install</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Install" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          <span class="md-ellipsis">Install</span>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/index.html" class="md-nav__link">
+        <span class="md-ellipsis">Overview</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/ubuntu.html" class="md-nav__link">
+        <span class="md-ellipsis">Install Kubeflow on Nimbus</span>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          <span class="md-ellipsis">Integration</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Integration" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          <span class="md-ellipsis">Integration</span>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration/index.html" class="md-nav__link">
+        <span class="md-ellipsis">Overview</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration/gitlab.html" class="md-nav__link">
+        <span class="md-ellipsis">Git<wbr>Lab</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration/identity.html" class="md-nav__link">
+        <span class="md-ellipsis">Identity Providers <wbr>(OIDC)</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration/auth.html" class="md-nav__link">
+        <span class="md-ellipsis">Auth<wbr>Service</span>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          <span class="md-ellipsis">User Guide</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="User Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          <span class="md-ellipsis">User Guide</span>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/index.html" class="md-nav__link">
+        <span class="md-ellipsis">Overview</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/notebooks.html" class="md-nav__link">
+        <span class="md-ellipsis">Kubeflow Notebooks</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/feast.html" class="md-nav__link">
+        <span class="md-ellipsis">Feast</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/spark.html" class="md-nav__link">
+        <span class="md-ellipsis">Spark</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/mlmd.html" class="md-nav__link">
+        <span class="md-ellipsis">ML Metadata <wbr>(MLMD)</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/mlflow.html" class="md-nav__link">
+        <span class="md-ellipsis">MLFlow</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/training.html" class="md-nav__link">
+        <span class="md-ellipsis">ML Training</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/tensorboard.html" class="md-nav__link">
+        <span class="md-ellipsis">Tensor<wbr>Board</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/katib.html" class="md-nav__link">
+        <span class="md-ellipsis">Hyperparameter Tuning</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/kserve.html" class="md-nav__link">
+        <span class="md-ellipsis">KServe</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/kfp.html" class="md-nav__link">
+        <span class="md-ellipsis">Kubeflow Pipelines</span>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          <span class="md-ellipsis">Use Cases</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Use Cases" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          <span class="md-ellipsis">Use Cases</span>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_1" type="checkbox" id="__nav_8_1" checked>
+      
+      
+      
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="helmet.html"><span class="md-ellipsis">Helmet Detection</span></a>
+          
+            <label for="__nav_8_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Helmet Detection" data-md-level="2">
+        <label class="md-nav__title" for="__nav_8_1">
+          <span class="md-nav__icon md-icon"></span>
+          <span class="md-ellipsis">Helmet Detection</span>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="helmet-notebook.html" class="md-nav__link">
+        <span class="md-ellipsis">Model Development with Kubeflow Notebook</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="helmet-pipeline.html" class="md-nav__link">
+        <span class="md-ellipsis">Model Deployment with Kubeflow Pipeline</span>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          <span class="md-ellipsis">Model Serving with Kubeflow KServe</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="#" class="md-nav__link md-nav__link--active">
+        <span class="md-ellipsis">Model Serving with Kubeflow KServe</span>
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      <span class="md-ellipsis">Model Serving with Kubeflow KServe</span>
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">Goal</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">Workflow</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-serve" class="md-nav__link">
+    <span class="md-ellipsis">Py<wbr>Torch Serve</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PyTorch Serve">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prepartion-for-model-archiver" class="md-nav__link">
+    <span class="md-ellipsis">Prepartion for Model Archiver</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#torchserve-model-archiver" class="md-nav__link">
+    <span class="md-ellipsis">Torchserve Model Archiver</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-torchserve-config" class="md-nav__link">
+    <span class="md-ellipsis">Create Torchserve Config</span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minio" class="md-nav__link">
+    <span class="md-ellipsis">Min<wbr>IO</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MinIO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-and-upload-to-minio" class="md-nav__link">
+    <span class="md-ellipsis">Create and Upload to Min<wbr>IO</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-minio-service-account-and-secret" class="md-nav__link">
+    <span class="md-ellipsis">Create Minio Service Account and Secret</span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kserve" class="md-nav__link">
+    <span class="md-ellipsis">kserve</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kserve">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-inferenceservice" class="md-nav__link">
+    <span class="md-ellipsis">Create Inference<wbr>Service</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-the-inferenceservice" class="md-nav__link">
+    <span class="md-ellipsis">Check the Inference<wbr>Service</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-inference" class="md-nav__link">
+    <span class="md-ellipsis">Perform Inference</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoscaling" class="md-nav__link">
+    <span class="md-ellipsis">Autoscaling</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canary-rollout" class="md-nav__link">
+    <span class="md-ellipsis">Canary Rollout</span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          <span class="md-ellipsis">Operation Guide</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Operation Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          <span class="md-ellipsis">Operation Guide</span>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operation-guide/index.html" class="md-nav__link">
+        <span class="md-ellipsis">Overview</span>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          <span class="md-ellipsis">Internals</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Internals" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          <span class="md-ellipsis">Internals</span>
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/auth.html" class="md-nav__link">
+        <span class="md-ellipsis">Authentication and Authorization</span>
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      <span class="md-ellipsis">Model Serving with Kubeflow KServe</span>
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">Goal</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">Workflow</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-serve" class="md-nav__link">
+    <span class="md-ellipsis">Py<wbr>Torch Serve</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PyTorch Serve">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prepartion-for-model-archiver" class="md-nav__link">
+    <span class="md-ellipsis">Prepartion for Model Archiver</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#torchserve-model-archiver" class="md-nav__link">
+    <span class="md-ellipsis">Torchserve Model Archiver</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-torchserve-config" class="md-nav__link">
+    <span class="md-ellipsis">Create Torchserve Config</span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minio" class="md-nav__link">
+    <span class="md-ellipsis">Min<wbr>IO</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MinIO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-and-upload-to-minio" class="md-nav__link">
+    <span class="md-ellipsis">Create and Upload to Min<wbr>IO</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-minio-service-account-and-secret" class="md-nav__link">
+    <span class="md-ellipsis">Create Minio Service Account and Secret</span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kserve" class="md-nav__link">
+    <span class="md-ellipsis">kserve</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="kserve">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-inferenceservice" class="md-nav__link">
+    <span class="md-ellipsis">Create Inference<wbr>Service</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-the-inferenceservice" class="md-nav__link">
+    <span class="md-ellipsis">Check the Inference<wbr>Service</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perform-inference" class="md-nav__link">
+    <span class="md-ellipsis">Perform Inference</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autoscaling" class="md-nav__link">
+    <span class="md-ellipsis">Autoscaling</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canary-rollout" class="md-nav__link">
+    <span class="md-ellipsis">Canary Rollout</span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset" role="main">
+                  
+
+
+  <a href="https://github.com/elements-of-ai/kubeflow-docs/blob/master/docs/use-cases/helmet-kserve.rst" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+<h1 id="model-serving-with-kubeflow-kserve"><span id="helmet-kserve"></span>Model Serving with Kubeflow KServe<a class="headerlink" href="#model-serving-with-kubeflow-kserve" title="Permalink to this heading">¶</a></h1>
+<h2 id="goal">Goal<a class="headerlink" href="#goal" title="Permalink to this heading">¶</a></h2>
+<p>The InferenceService custom resource is the primary interface that is used for deploying models on KServe.
+Inside an InferenceService, users can specify multiple components that are used for handling inference requests.
+These components are the predictor, transformer, and explainer.
+For more detailed documentation on Kubeflow KServe, refer to <a class="reference external" href="https://kserve.github.io/website/0.7/modelserving/data_plane/">KServe</a>.</p>
+<p>In this tutorial, you will deploy an InferenceService with a predictor that will load a Helemt Detection Yolov5 model trained with custom dataset,
+which the fine-tuning process is shown at the above experiment.</p>
+<p>You will then send an inference request to your deployed model in order to get a detection the presence of helmets on individuals your request corresponds to.</p>
+<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permalink to this heading">¶</a></h2>
+<p>The session mainly covers:</p>
+<ul>
+<li><p>PyTorch Serve: package PyTorch model with custom preprocess/postprocess functions</p></li>
+<li><p>MinIO storage usage</p></li>
+<li><p>KServe: inferenceservice, autoscaling, canary rollout</p>
+<blockquote>
+<div><img alt="../_images/helmet-kserve-01.png" src="../_images/helmet-kserve-01.png" />
+</div></blockquote>
+</li>
+</ul>
+<h3 id="pytorch-serve">PyTorch Serve<a class="headerlink" href="#pytorch-serve" title="Permalink to this heading">¶</a></h3>
+<p>Learn more about torchscript here: <a class="reference external" href="https://pytorch.org/tutorials/beginner/deploy_seq2seq_hybrid_frontend_tutorial.html/">TorchScript</a>.</p>
+<h4 id="prepartion-for-model-archiver">Prepartion for Model Archiver<a class="headerlink" href="#prepartion-for-model-archiver" title="Permalink to this heading">¶</a></h4>
+<p>Firstly, the data scientist should prepare 3 files:</p>
+<ul class="simple">
+<li><p>helmet.pt: fine-tuning the model with your own data and save the parameters</p></li>
+<li><p>helmet.torchscript.pt: a serialized file (.pt or .pth) should be a checkpoint in case of torchscript and state_dict in case of eager mode.</p></li>
+<li><p>handler.py: codes for model initialization, pre-processing, post-processing, etc.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Custom TorchServe model handler for YOLOv5 models (model_handler.py)</span>
+<span class="sd">   BaseHandler: https://github.com/pytorch/serve/blob/master/ts/torch_handler/base_handler.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">ts.torch_handler.base_handler</span> <span class="kn">import</span> <span class="n">BaseHandler</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision.transforms</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">torchvision</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="k">class</span> <span class="nc">ModelHandler</span><span class="p">(</span><span class="n">BaseHandler</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A custom model handler implementation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">img_size</span> <span class="o">=</span> <span class="mi">640</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Image size (px). Images will be resized to this resolution before inference.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># call superclass initializer</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span> <span class="o">=</span> <span class="mi">640</span>
+
+    <span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts input images to float tensors.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data (List): Input data from the request in the form of a list of image tensors.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Tensor: single Tensor of shape [BATCH_SIZE, 3, IMG_SIZE, IMG_SIZE]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">transform</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">Resize</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">img_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span><span class="p">))</span>
+        <span class="p">])</span>
+
+        <span class="c1"># Method 1</span>
+        <span class="c1"># image = data[0].get(&quot;data&quot;) or data[0].get(&quot;body&quot;)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;data params is none&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;no data&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="c1"># if the image is a string of bytesarray.</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+            <span class="c1"># If the image is sent as bytesarray</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytearray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># if the image is a list</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+            <span class="c1"># force convert to tensor</span>
+            <span class="c1"># and resize to [img_size, img_size]</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+            <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="c1"># convert list of equal-size tensors to single stacked tensor</span>
+        <span class="c1"># has shape BATCH_SIZE x 3 x IMG_SIZE x IMG_SIZE</span>
+        <span class="n">images_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">images</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">images_tensor</span>
+
+    <span class="k">def</span> <span class="nf">postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inference_output</span><span class="p">):</span>
+        <span class="c1"># perform NMS (nonmax suppression) on model outputs</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">non_max_suppression</span><span class="p">(</span><span class="n">inference_output</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># initialize empty list of detections for each image</span>
+        <span class="n">detections</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred</span><span class="p">))]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">image_detections</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pred</span><span class="p">):</span>  <span class="c1"># axis 0: for each image</span>
+            <span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">image_detections</span><span class="p">:</span>  <span class="c1"># axis 1: for each detection</span>
+                <span class="c1"># x1,y1,x2,y2 in normalized image coordinates (i.e. 0.0-1.0)</span>
+                <span class="n">xyxy</span> <span class="o">=</span> <span class="n">det</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_size</span>
+                <span class="c1"># confidence value</span>
+                <span class="n">conf</span> <span class="o">=</span> <span class="n">det</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="c1"># index of predicted class</span>
+                <span class="n">class_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">det</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+                <span class="c1"># get label of predicted class</span>
+                <span class="c1"># if missing, then just return class idx</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">class_idx</span><span class="p">),</span> <span class="n">class_idx</span><span class="p">)</span>
+
+                <span class="n">detections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="n">xyxy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                    <span class="s2">&quot;y1&quot;</span><span class="p">:</span> <span class="n">xyxy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                    <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="n">xyxy</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                    <span class="s2">&quot;y2&quot;</span><span class="p">:</span> <span class="n">xyxy</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+                    <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="n">conf</span><span class="p">,</span>
+                    <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">label</span>
+                <span class="p">})</span>
+
+        <span class="c1"># format each detection</span>
+        <span class="k">return</span> <span class="n">detections</span>
+
+
+<span class="k">def</span> <span class="nf">non_max_suppression</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">conf_thres</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">iou_thres</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">agnostic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="p">(),</span> <span class="n">max_det</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs Non-Maximum Suppression (NMS) on inference results</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list of detections, on (n,6) tensor per image [xyxy, conf, cls]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nc</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">5</span>  <span class="c1"># number of classes</span>
+    <span class="n">xc</span> <span class="o">=</span> <span class="n">prediction</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">conf_thres</span>  <span class="c1"># candidates</span>
+
+    <span class="c1"># Checks</span>
+    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">conf_thres</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Invalid Confidence threshold </span><span class="si">{</span><span class="n">conf_thres</span><span class="si">}</span><span class="s1">, valid values are between 0.0 and 1.0&#39;</span>
+    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">iou_thres</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Invalid IoU </span><span class="si">{</span><span class="n">iou_thres</span><span class="si">}</span><span class="s1">, valid values are between 0.0 and 1.0&#39;</span>
+
+    <span class="c1"># Settings</span>
+    <span class="c1"># (pixels) minimum and maximum box width and height</span>
+    <span class="n">min_wh</span><span class="p">,</span> <span class="n">max_wh</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4096</span>
+    <span class="n">max_nms</span> <span class="o">=</span> <span class="mi">30000</span>  <span class="c1"># maximum number of boxes into torchvision.ops.nms()</span>
+    <span class="n">time_limit</span> <span class="o">=</span> <span class="mf">10.0</span>  <span class="c1"># seconds to quit after</span>
+    <span class="n">redundant</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># require redundant detections</span>
+    <span class="n">multi_label</span> <span class="o">&amp;=</span> <span class="n">nc</span> <span class="o">&gt;</span> <span class="mi">1</span>  <span class="c1"># multiple labels per box (adds 0.5ms/img)</span>
+    <span class="n">merge</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># use merge-NMS</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">prediction</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="p">]</span> <span class="o">*</span> <span class="n">prediction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">prediction</span><span class="p">):</span>  <span class="c1"># image index, image inference</span>
+        <span class="c1"># Apply constraints</span>
+        <span class="c1"># x[((x[..., 2:4] &lt; min_wh) | (x[..., 2:4] &gt; max_wh)).any(1), 4] = 0  # width-height</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">xc</span><span class="p">[</span><span class="n">xi</span><span class="p">]]</span>  <span class="c1"># confidence</span>
+
+        <span class="c1"># Cat apriori labels if autolabelling</span>
+        <span class="k">if</span> <span class="n">labels</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">xi</span><span class="p">]):</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">xi</span><span class="p">]</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="n">nc</span> <span class="o">+</span> <span class="mi">5</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">v</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>  <span class="c1"># box</span>
+            <span class="n">v</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># conf</span>
+            <span class="n">v</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)),</span> <span class="n">l</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">long</span><span class="p">()</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># cls</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># If none remain process next image</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Compute conf</span>
+        <span class="n">x</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:]</span> <span class="o">*=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>  <span class="c1"># conf = obj_conf * cls_conf</span>
+
+        <span class="c1"># Box (center x, center y, width, height) to (x1, y1, x2, y2)</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="n">xywh2xyxy</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+
+        <span class="c1"># Detections matrix nx6 (xyxy, conf, cls)</span>
+        <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+            <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:]</span> <span class="o">&gt;</span> <span class="n">conf_thres</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">as_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">box</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">j</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">float</span><span class="p">()),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># best class only</span>
+            <span class="n">conf</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">box</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">j</span><span class="o">.</span><span class="n">float</span><span class="p">()),</span> <span class="mi">1</span><span class="p">)[</span>
+                <span class="n">conf</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">conf_thres</span><span class="p">]</span>
+
+        <span class="c1"># Filter by class</span>
+        <span class="k">if</span> <span class="n">classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+
+        <span class="c1"># Apply finite constraint</span>
+        <span class="c1"># if not torch.isfinite(x).all():</span>
+        <span class="c1">#     x = x[torch.isfinite(x).all(1)]</span>
+
+        <span class="c1"># Check shape</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># number of boxes</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">n</span><span class="p">:</span>  <span class="c1"># no boxes</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">max_nms</span><span class="p">:</span>  <span class="c1"># excess boxes</span>
+            <span class="c1"># sort by confidence</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">max_nms</span><span class="p">]]</span>
+
+        <span class="c1"># Batched NMS</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="n">agnostic</span> <span class="k">else</span> <span class="n">max_wh</span><span class="p">)</span>  <span class="c1"># classes</span>
+        <span class="c1"># boxes (offset by class), scores</span>
+        <span class="n">boxes</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">nms</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">iou_thres</span><span class="p">)</span>  <span class="c1"># NMS</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_det</span><span class="p">:</span>  <span class="c1"># limit detections</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="p">[:</span><span class="n">max_det</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">merge</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mf">3E3</span><span class="p">):</span>  <span class="c1"># Merge NMS (boxes merged using weighted mean)</span>
+            <span class="c1"># update boxes as boxes(i,4) = weights(i,n) * boxes(n,4)</span>
+            <span class="n">iou</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">box_iou</span><span class="p">(</span>
+                <span class="n">boxes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">boxes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">iou_thres</span>  <span class="c1"># iou matrix</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">iou</span> <span class="o">*</span> <span class="n">scores</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>  <span class="c1"># box weights</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">4</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">(</span>
+            <span class="p">)</span> <span class="o">/</span> <span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># merged boxes</span>
+            <span class="k">if</span> <span class="n">redundant</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="n">iou</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># require redundancy</span>
+
+        <span class="n">output</span><span class="p">[</span><span class="n">xi</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="k">def</span> <span class="nf">xywh2xyxy</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># Convert nx4 boxes from [x, y, w, h] to [x1, y1, x2, y2] where xy1=top-left, xy2=bottom-right</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># top left x</span>
+    <span class="n">y</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># top left y</span>
+    <span class="n">y</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># bottom right x</span>
+    <span class="n">y</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># bottom right y</span>
+    <span class="k">return</span> <span class="n">y</span>
+</code></pre></div>
+</div>
+<h4 id="torchserve-model-archiver">Torchserve Model Archiver<a class="headerlink" href="#torchserve-model-archiver" title="Permalink to this heading">¶</a></h4>
+<p>It basically create a tar called {model-name}.mar from model-file, serialized-file, handler</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$0</span><span class="k">)</span>/torchserve
+<span class="nv">base_path</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$base_path</span>/model-store<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$base_path</span>/model-store<span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="nv">$base_path</span>/model-store/helmet_detection.mar<span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span>rm<span class="w"> </span><span class="nv">$base_path</span>/model-store/helmet_detection.mar
+<span class="k">fi</span>
+
+pip<span class="w"> </span>install<span class="w"> </span>torch-model-archiver<span class="w"> </span>-i<span class="w"> </span>https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+torch-model-archiver<span class="w"> </span>--model-name<span class="w"> </span>helmet_detection<span class="w"> </span><span class="se">\</span>
+--version<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span>--serialized-file<span class="w"> </span><span class="nv">$base_path</span>/helmet.torchscript.pt<span class="w"> </span><span class="se">\</span>
+--handler<span class="w"> </span><span class="nv">$base_path</span>/torchserve_handler.py<span class="w"> </span><span class="se">\</span>
+--extra-files<span class="w"> </span><span class="nv">$base_path</span>/index_to_name.json,<span class="nv">$base_path</span>/torchserve_handler.py
+
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;create successfully&quot;</span>
+</code></pre></div>
+</div>
+<p>The more detailed instruction you can refer to <a class="reference external" href="https://github.com/harperjuanl/helmet_yolov5_torchserve/">helmet_yolov5_torchserve</a></p>
+<h4 id="create-torchserve-config">Create Torchserve Config<a class="headerlink" href="#create-torchserve-config" title="Permalink to this heading">¶</a></h4>
+<p>Feel free to change the parameters:</p>
+<ul class="simple">
+<li><p>minWorkers: the minimum number of workers of a model</p></li>
+<li><p>maxWorkers: the maximum number of workers of a model</p></li>
+<li><p>batchSize: the batch size of a model</p></li>
+<li><p>maxBatchDelay: the maximum dalay in msec of a batch of a model</p></li>
+<li><p>responseTimeout: the timeout in msec of a model’s response</p></li>
+<li><p>defaultVersion: the default version of a model</p></li>
+<li><p>marName: the mar file name of a model</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><code>inference_address=http://0.0.0.0:8085
+management_address=http://0.0.0.0:8081
+metrics_address=http://0.0.0.0:8082
+grpc_inference_port=7070
+grpc_management_port=7071
+enable_metrics_api=true
+metrics_format=prometheus
+number_of_netty_threads=4
+job_queue_size=10
+enable_envvars_config=true
+install_py_dep_per_model=true
+model_store=/home/model-server/torchserve_mar/helmet_detection/model-store
+model_snapshot={&quot;name&quot;:&quot;startup.cfg&quot;,&quot;modelCount&quot;:1,&quot;models&quot;:{&quot;helmet_detection&quot;:{&quot;1.0&quot;:{&quot;defaultVersion&quot;:true,&quot;marName&quot;:&quot;helmet_detection.mar&quot;,&quot;minWorkers&quot;:1,&quot;maxWorkers&quot;:5,&quot;batchSize&quot;:4,&quot;maxBatchDelay&quot;:100,&quot;responseTimeout&quot;:120}}}}
+</code></pre></div>
+</div>
+<h3 id="minio">MinIO<a class="headerlink" href="#minio" title="Permalink to this heading">¶</a></h3>
+<h4 id="create-and-upload-to-minio">Create and Upload to MinIO<a class="headerlink" href="#create-and-upload-to-minio" title="Permalink to this heading">¶</a></h4>
+<p>If you already have the minio storage, you can directly follow the next steps. If not, we also provide a standalone minio deployment guide on the kubernetes clusters.</p>
+<p>You can use the <a class="reference external" href="https://github.com/vmware/ml-ops-platform-for-vsphere/tree/main/website/content/en/docs/kubeflow-tutorial/lab4_minio_deploy">MinIO Deployment Guide</a> to apply in your clusters.</p>
+<p>This step uploads torchserve/model-store, torchserve/config to MinIO buckets</p>
+<p>You need to find the MINIO</p>
+<ul class="simple">
+<li><p>endpoint_url</p></li>
+<li><p>key_id</p></li>
+<li><p>access_key</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ENDPOINT_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;http://10.117.233.16:9000&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_REGION&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;us-east-1&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ACCESS_KEY_ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;minioadmin&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_SECRET_ACCESS_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;minioadmin&quot;</span>
+
+<span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span>
+                    <span class="n">endpoint_url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AWS_ENDPOINT_URL&quot;</span><span class="p">),</span>
+                    <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;current buckets in s3:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">s3</span><span class="o">.</span><span class="n">buckets</span><span class="o">.</span><span class="n">all</span><span class="p">()))</span>
+
+<span class="n">bucket_name</span><span class="o">=</span><span class="s1">&#39;helmet-bucket&#39;</span>
+<span class="n">s3</span><span class="o">.</span><span class="n">create_bucket</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">)</span>
+
+<span class="n">curr_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">curr_path</span><span class="p">,</span> <span class="s2">&quot;torchserve&quot;</span><span class="p">)</span>
+
+
+<span class="n">bucket_path</span> <span class="o">=</span> <span class="s2">&quot;helmet_detection&quot;</span>
+
+<span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+
+<span class="c1"># upload</span>
+<span class="n">bucket</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s2">&quot;model-store&quot;</span><span class="p">,</span> <span class="s2">&quot;helmet_detection.mar&quot;</span><span class="p">),</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bucket_path</span><span class="p">,</span> <span class="s2">&quot;model-store/helmet_detection.mar&quot;</span><span class="p">))</span>
+<span class="n">bucket</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;config.properties&quot;</span><span class="p">),</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bucket_path</span><span class="p">,</span> <span class="s2">&quot;config/config.properties&quot;</span><span class="p">))</span>
+
+<span class="c1"># check files</span>
+<span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">bucket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Prefix</span><span class="o">=</span><span class="n">bucket_path</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<h4 id="create-minio-service-account-and-secret">Create Minio Service Account and Secret<a class="headerlink" href="#create-minio-service-account-and-secret" title="Permalink to this heading">¶</a></h4>
+<p>You will also need to specify the s3-endpoint, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY here
+If you are using default user <a class="reference external" href="mailto:user&#37;&#52;&#48;exampe&#46;com/12341234">user<span>&#64;</span>exampe<span>&#46;</span>com/12341234</a>, please also set a different name for
+all the metadata: name in the yaml file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt; EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Secret</span>
+<span class="s">metadata:</span>
+<span class="s">name: minio-s3-secret-user</span>
+<span class="s">annotations:</span>
+<span class="hll"><span class="s">    serving.kserve.io/s3-endpoint: &quot;10.117.233.16:9000&quot; # replace with your s3 endpoint e.g minio-service.kubeflow:9000</span>
+</span><span class="s">    serving.kserve.io/s3-usehttps: &quot;0&quot; # by default 1, if testing with minio you can set to 0</span>
+<span class="s">    serving.kserve.io/s3-region: &quot;us-east-2&quot;</span>
+<span class="s">    serving.kserve.io/s3-useanoncredential: &quot;false&quot; # omitting this is the same as false, if true will ignore provided credential and use anonymous credentials</span>
+<span class="s">type: Opaque</span>
+<span class="s">stringData: # use &quot;stringData&quot; for raw credential string or &quot;data&quot; for base64 encoded string</span>
+<span class="hll"><span class="s">AWS_ACCESS_KEY_ID: minioadmin</span>
+</span><span class="hll"><span class="s">AWS_SECRET_ACCESS_KEY: minioadmin</span>
+</span><span class="s">---</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: ServiceAccount</span>
+<span class="s">metadata:</span>
+<span class="s">name: minio-service-account-user</span>
+<span class="s">secrets:</span>
+<span class="s">- name: minio-s3-secret-user</span>
+<span class="s">EOF</span>
+</code></pre></div>
+</div>
+<h3 id="kserve">kserve<a class="headerlink" href="#kserve" title="Permalink to this heading">¶</a></h3>
+<h4 id="create-inferenceservice">Create InferenceService<a class="headerlink" href="#create-inferenceservice" title="Permalink to this heading">¶</a></h4>
+<p>KServe provides built-in serving runtimes to deploy models trained in common ML frameworks.
+These allow you to deploy your models into a robust infrastructure by just pointing to
+where the model artifacts are stored remotely.</p>
+<p>The InferenceService manifest gives you full control over the containers used to deploy your machine learning
+model, we could write an InferenceService manifest like the one below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt; EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: &quot;serving.kserve.io/v1beta1&quot;</span>
+<span class="s">kind: &quot;InferenceService&quot;</span>
+<span class="s">metadata:</span>
+<span class="s">name: &quot;helmet-detection-serving&quot;</span>
+<span class="s">spec:</span>
+<span class="s">predictor:</span>
+<span class="hll"><span class="s">    serviceAccountName: minio-service-account-user</span>
+</span><span class="s">    model:</span>
+<span class="s">    modelFormat:</span>
+<span class="s">        name: pytorch</span>
+<span class="hll"><span class="s">    storageUri: &quot;s3://helmet-bucket/helmet_detection&quot;</span>
+</span><span class="s">    resources:</span>
+<span class="s">        requests:</span>
+<span class="s">            cpu: 50m</span>
+<span class="s">            memory: 200Mi</span>
+<span class="s">        limits:</span>
+<span class="s">            cpu: 100m</span>
+<span class="s">            memory: 500Mi</span>
+<span class="s">        # limits:</span>
+<span class="s">        #   nvidia.com/gpu: &quot;1&quot;   # for inference service on GPU</span>
+<span class="s">EOF</span>
+</code></pre></div>
+</div>
+<p>As we can see highlighted above, the main points that we will need to take into account are:</p>
+<ul class="simple">
+<li><p>Set storageUri to your bucket_name/bucket_path</p></li>
+<li><p>You may also need to change metadata: name and serviceAccountName</p></li>
+</ul>
+<h4 id="check-the-inferenceservice">Check the InferenceService<a class="headerlink" href="#check-the-inferenceservice" title="Permalink to this heading">¶</a></h4>
+<p>Once your InferenceService is applied ready to your cluster . Run the following cell to get host through kubectl, which will be set to the headers in our request</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>inferenceservice<span class="w"> </span>helmet-detection-serving<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.url}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;/&quot;</span><span class="w"> </span>-f<span class="w"> </span><span class="m">3</span>
+</code></pre></div>
+</div>
+<p>Define a Test_bot for convenience, and determine host and session</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">multiprocess</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">PIL.Image</span> <span class="k">as</span> <span class="nn">Image</span>
+<span class="c1"># from PIL import Image</span>
+
+
+<span class="k">class</span> <span class="nc">Test_bot</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="n">uri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Host&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s2">&quot;image/jpeg&quot;</span><span class="p">,</span> <span class="s1">&#39;Cookie&#39;</span><span class="p">:</span> <span class="s2">&quot;authservice_session=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="s1">&#39;./1.jpg&#39;</span>
+
+    <span class="k">def</span> <span class="nf">update_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="n">uri</span>
+
+    <span class="k">def</span> <span class="nf">update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+    <span class="k">def</span> <span class="nf">update_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_headers</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">update_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_headers</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">update_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Host&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s2">&quot;image/jpeg&quot;</span><span class="p">,</span> <span class="s1">&#39;Cookie&#39;</span><span class="p">:</span> <span class="s2">&quot;authservice_session=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">image_data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;instances&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">image_data</span><span class="p">]})</span>
+
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">+</span> <span class="s1">&#39;/v1/models/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+</span> <span class="s1">&#39;:predict&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">uri</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+
+    <span class="k">def</span> <span class="nf">readiness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># uri = self.uri + &#39;/v1/models/&#39; + self.model</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">+</span> <span class="s1">&#39;/v1/models/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+
+    <span class="k">def</span> <span class="nf">explain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">+</span> <span class="s1">&#39;/v1/models/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">+</span> <span class="s1">&#39;:explain&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+    <span class="k">def</span> <span class="nf">concurrent_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fire &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; requests to &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+            <span class="n">responses</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">responses</span>
+</code></pre></div>
+</div>
+<p>Use your web browser to login to Kubeflow, and get Cookies: authservice_session (Chrome: Developer Tools -&gt; Applications -&gt; Cookies)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="c1"># replace it with the url you used to access Kubeflow</span>
+<span class="n">bot</span> <span class="o">=</span> <span class="n">Test_bot</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s1">&#39;http://10.117.233.8&#39;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s1">&#39;helmet_detection&#39;</span><span class="p">,</span>
+            <span class="c1"># replace it with what is printed above</span>
+            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;helmet-detection-serving.kubeflow-user-example-com.example.com&#39;</span><span class="p">,</span>
+            <span class="c1"># replace it</span>
+            <span class="n">session</span><span class="o">=</span><span class="s1">&#39;MTY3MDM5OTkzNnxOd3dBTkZZeU5GSkhUVE5NVGtaRk1rMVpXVVpJVlV4SFFUWkpSRFpIVmxaQ05WaERTRlpRV2xoUFRWZEpXa2hTTjB4SVFrMDNSRkU9fFWl635XpDECJSOEnzFJLOugFqIiGbIniTh0uPs0BCW1&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">bot</span><span class="o">.</span><span class="n">readiness</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bot</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s1">&#39;./2.jpg&#39;</span><span class="p">))</span>
+
+<span class="n">detections</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">bot</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s1">&#39;./2.jpg&#39;</span><span class="p">))</span>
+</code></pre></div>
+</div>
+<h4 id="perform-inference">Perform Inference<a class="headerlink" href="#perform-inference" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">visualize_detections</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">detections</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)):</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="n">scoreArr</span><span class="p">,</span> <span class="n">nameArr</span><span class="p">,</span> <span class="n">boxArr</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>  <span class="c1">#class_names</span>
+        <span class="n">box</span> <span class="o">=</span> <span class="p">[</span><span class="n">detection</span><span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">],</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;y1&#39;</span><span class="p">],</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;x2&#39;</span><span class="p">],</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;y2&#39;</span><span class="p">]]</span>      <span class="c1">#boxes</span>
+        <span class="n">scoreArr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+        <span class="n">nameArr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">boxArr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+
+    <span class="n">scoreArr</span><span class="p">,</span> <span class="n">nameArr</span><span class="p">,</span> <span class="n">boxArr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">scoreArr</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nameArr</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boxArr</span><span class="p">)</span>
+
+    <span class="n">boxes</span><span class="p">,</span> <span class="n">class_names</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">boxArr</span><span class="p">,</span> <span class="n">nameArr</span><span class="p">,</span> <span class="n">scoreArr</span>
+    <span class="n">max_boxes</span><span class="p">,</span> <span class="n">min_score</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span> <span class="mf">0.1</span>
+    <span class="n">score_split_w</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># 0.95~1.00</span>
+    <span class="n">score_split_r</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1">#0.90~0.95</span>
+
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">boxes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_boxes</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_score</span><span class="p">:</span>
+            <span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">boxes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">class_names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span>
+            <span class="n">xmin</span> <span class="o">*=</span> <span class="mi">800</span>
+            <span class="n">ymin</span> <span class="o">*=</span> <span class="mi">500</span>
+            <span class="n">w</span> <span class="o">*=</span> <span class="mi">800</span>
+            <span class="n">h</span> <span class="o">*=</span> <span class="mi">500</span>
+
+            <span class="k">if</span> <span class="n">class_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;person&#39;</span><span class="p">:</span>
+                <span class="n">patch</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">],</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span>
+            <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">patch</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">],</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span>
+            <span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">class_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;person&#39;</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">xmin</span><span class="p">,</span>
+                <span class="n">ymin</span><span class="p">,</span>
+                <span class="n">text</span><span class="p">,</span>
+                <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;facecolor&quot;</span><span class="p">:</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+                <span class="n">clip_box</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">clipbox</span><span class="p">,</span>
+                <span class="n">clip_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">xmin</span><span class="p">,</span>
+                <span class="n">ymin</span><span class="p">,</span>
+                <span class="n">text</span><span class="p">,</span>
+                <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;facecolor&quot;</span><span class="p">:</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">},</span>
+                <span class="n">clip_box</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">clipbox</span><span class="p">,</span>
+                <span class="n">clip_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">image_path</span> <span class="o">=</span> <span class="s1">&#39;./2.jpg&#39;</span>
+<span class="n">visualize_detections</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">detections</span><span class="p">[</span><span class="s1">&#39;predictions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
+</div>
+<h4 id="autoscaling">Autoscaling<a class="headerlink" href="#autoscaling" title="Permalink to this heading">¶</a></h4>
+<p>Knative Pod Autoscaler (KPA)</p>
+<ul class="simple">
+<li><p>Part of the Knative Serving core and enabled by default once Knative Serving is installed.</p></li>
+<li><p>Supports scale to zero functionality.</p></li>
+<li><p>Does not support CPU-based autoscaling.</p></li>
+</ul>
+<p>Horizontal Pod Autoscaler (HPA)</p>
+<ul class="simple">
+<li><p>Not part of the Knative Serving core, and must be enabled after Knative Serving installation.</p></li>
+<li><p>Does not support scale to zero functionality.</p></li>
+<li><p>Supports CPU-based autoscaling.</p></li>
+<li><p>If you use CPU-based autotscaling, ake sure HPA is installed before move on (check by kubectl get deploy autoscaler-hpa -n knative-serving), will need to install it from <a class="reference external" href="https://github.com/knative/serving/releases/">https://github.com/knative/serving/releases/</a></p></li>
+</ul>
+<p>Add autoscaling tag to the InferenceService and apply</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>%%bash
+
+cat<span class="w"> </span><span class="s">&lt;&lt; EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: serving.kserve.io/v1beta1</span>
+<span class="s">kind: InferenceService</span>
+<span class="s">metadata:</span>
+<span class="s">name: helmet-detection-serving</span>
+<span class="s">annotations:</span>
+<span class="s">    autoscaling.knative.dev/class: hpa.autoscaling.knative.dev</span>
+<span class="s">    # see available tags: https://knative.dev/docs/serving/autoscaling/autoscaling-targets/</span>
+<span class="s">    autoscaling.knative.dev/max-scale: &quot;3&quot;</span>
+<span class="s">    # HPA: specifies the CPU percentage target (default &quot;80&quot;).</span>
+<span class="s">    # KPA: Target x requests in-flight per pod.</span>
+<span class="s">    autoscaling.knative.dev/target: &quot;80&quot;</span>
+<span class="s">spec:</span>
+<span class="s">predictor:</span>
+<span class="s">    serviceAccountName: minio-service-account-user</span>
+<span class="s">    model:</span>
+<span class="s">    modelFormat:</span>
+<span class="s">        name: pytorch</span>
+<span class="s">    storageUri: &quot;s3://helmet-bucket/helmet_detection&quot;</span>
+<span class="s">    resources:</span>
+<span class="s">        requests:</span>
+<span class="s">            cpu: 50m</span>
+<span class="s">            memory: 200Mi</span>
+<span class="s">        limits:</span>
+<span class="s">            cpu: 100m</span>
+<span class="s">            memory: 500Mi</span>
+<span class="s">EOF</span>
+</code></pre></div>
+</div>
+<h4 id="canary-rollout">Canary Rollout<a class="headerlink" href="#canary-rollout" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>%%bash
+
+cat<span class="w"> </span><span class="s">&lt;&lt; EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: serving.kserve.io/v1beta1</span>
+<span class="s">kind: InferenceService</span>
+<span class="s">metadata:</span>
+<span class="s">name: helmet-detection-serving</span>
+<span class="s">annotations:</span>
+<span class="s">    autoscaling.knative.dev/class: hpa.autoscaling.knative.dev</span>
+<span class="s">    autoscaling.knative.dev/target: &quot;80&quot;</span>
+<span class="s">    serving.kserve.io/enable-tag-routing: &quot;true&quot;</span>
+<span class="s">spec:</span>
+<span class="s">predictor:</span>
+<span class="s">    serviceAccountName: minio-service-account-user</span>
+<span class="s">    model:</span>
+<span class="s">    modelFormat:</span>
+<span class="s">        name: pytorch</span>
+<span class="s">    storageUri: &quot;s3://helmet-bucket/helmet_detection&quot;</span>
+<span class="s">    resources:</span>
+<span class="s">        requests:</span>
+<span class="s">            cpu: 50m</span>
+<span class="s">            memory: 200Mi</span>
+<span class="s">        limits:</span>
+<span class="s">            cpu: 100m</span>
+<span class="s">            memory: 500Mi</span>
+<span class="s">EOF</span>
+</code></pre></div>
+</div>
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="helmet-pipeline.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Model Deployment with Kubeflow Pipeline" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Model Deployment with Kubeflow Pipeline
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../operation-guide/index.html" class="md-footer__link md-footer__link--next" aria-label="Next: Overview" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Overview
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  
+  
+  <div class="md-footer-meta md-typeset">
+    
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-footer-copyright__highlight">
+        &#169; Copyright 2023, Elements of AI.
+        
+    </div>
+  
+    Created using
+    <a href="https://www.sphinx-doc.org/" target="_blank" rel="noopener">Sphinx</a>
+    6.1.3.
+     and
+    <a href="https://github.com/jbms/sphinx-immaterial/" target="_blank" rel="noopener">Sphinx-Immaterial</a>
+  
+</div>
+      
+    </div>
+    
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.expand", "navigation.sections", "navigation.top", "search.share"], "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../_static/javascripts/bundle.444abb77.min.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    
+  </body>
+</html>

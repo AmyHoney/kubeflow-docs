@@ -2,69 +2,45 @@
 Open Source Kubeflow Components
 ===============================
 
-Open Source Kubeflow (OSS Kubeflow) is a platform and integrated toolkit for Machine Learning (ML) built on Kubernetes. OSS Kubeflow supports ML workflows from data preparation through training and deployment. It enables a scalable pipeline structure that helps ensure containerized steps with defined dependencies. OSS Kubeflow extends Kubernetes’ ability to run independent and configurable systems with a curated set of compatible tools and frameworks specific for ML.
+.. image:: ../_static/kubeflow-platform.png
 
-An OSS Kubeflow deployment is
+Open Source Kubeflow (OSS Kubeflow) is a platform that provides a complete end-to-end machine learning solution. It includes components for each stage in the machine learning lifecycle, from data preparation to model training and deployment, all within a single, integrated platform. Operators can choose what is best for their users, there is no requirement to deploy every component. Kubeflow is an imperative tool for any organization looking to leverage the power of machine learning to accelerate innovation and drive business value.
 
-- *Portable* - Run ML systems across various clouds, local, and on-premises platforms and ensure consistent behavior for experimentation, test, and production use.
-
-- *Scalable* - Maximize available resources and scale with little manual effort.
-
-- *Composable* - Compose independent containerized components as steps in a full ML workflow with defined inputs and outputs.
+Kubeflow streamlines data exploration, enabling users to easily discover and analyze relevant information. With Kubeflow, building and training machine learning models becomes more efficient, as the platform supports hyperparameter tuning and model versioning to optimize performance. Its advanced capabilities also include comprehensive analysis of model performance, ensuring that only the most accurate models are deployed. Additionally, Kubeflow manages compute power and serving infrastructure, allowing for seamless integration with production environments. By offering a cohesive solution for all stages of machine learning development, Kubeflow revolutionizes the way data scientists and engineers create, evaluate, and deploy models.
 
 Jupyter Notebook Services
 -------------------------
 
-OSS Kubeflow deployments include services for spawning and managing Jupyter notebooks. With the Notebook servers component you can use the default Docker image or create custom images to support the dependencies you require. ML frameworks and OSS Kubeflow components provide SDKs that enable you to write code to implement the steps in an ML workflow.
+OSS Kubeflow deployments include services for creating and managing Jupyter Notebooks. You can customize your notebook deployment and your compute resources to suit your data science needs. With this service, you can easily create, edit, and share Jupyter Notebooks with others, collaborate on projects, and save your work in the cloud. 
 
-Model Training Operators
-------------------------
+Pipelines
+---------
 
-OSS Kubeflow provides a number of frameworks for training, including MPI, MXNet, PyTorch, TensorFlow, and XGBoost. These are provided as Kubernetes custom resources that enable you to submit jobs to training operators. You can configure the training controller for an operator to use CPUs or GPUs and to suit various cluster sizes. The controller takes care of spinning up and managing all of the individual processes and configuring them to talk to one another.
+Kubeflow Pipelines is a comprehensive solution for deploying and managing end-to-end ML workflows. A pipeline is a description of a machine learning workflow, including all the components in the workflow and how the components relate to each other in the form of a graph. A pipeline component is self-contained set of code that performs one step in the ML workflow (pipeline), such as data preprocessing, data transformation, model training, and so on. A component is analogous to a function, in that it has a name, parameters, return values, and a body.
+
+When you run a pipeline, the system launches one or more Kubernetes Pods corresponding to the steps (components) in your workflow (pipeline). The Pods start Docker containers, and the containers in turn start your programs. You can schedule and compare runs, and examine detailed reports on each run.
+
+Machine Learning Metadata DB
+----------------------------
+
+The Machine Learning Metadata DB (MLMD) is the metadata management component of OSS Kubeflow. Metadata is the data that includes information about the context of other data and is generated in each phase of the machine learning lifecycle. From the data extraction to the model monitoring phase, all machine learning related processes create specific metadata. Machine Learning Metadata DB is a centralized place for storing the metadata of machine learning models. It includes information such as the creator of different model versions, when they are created, the training data, parameters, and the place and performance metrics of each version of a model. It also provides information about the environment within which an ML model is built.
 
 The Katib Hyperparameter Tuning System
 --------------------------------------
 
-Hyperparameters are the variables that control a model training process, including: learning rate, number of layers in a neural network, number of nodes in each layer. Automated hyperparameter tuning works by optimizing a target variable such as the model’s accuracy. Katib runs several training jobs to test different sets of hyperparameter configurations and outputs the optimized values for hyperparameters.
+Katib is a Kubernetes-native project for automated machine learning. It is a powerful hyperparameter tuning system designed to optimize machine learning model performance on Kubernetes. This highly scalable and flexible system supports various tuning algorithms, integrates seamlessly with popular frameworks, and provides a user-friendly dashboard for monitoring and visualization. By automating the search for optimal hyperparameters, Katib enables data scientists and machine learning engineers to streamline their workflows and focus on more critical aspects of their projects.
 
-Pipelines System
-----------------
+Model Training Operators
+------------------------
 
-The OSS Kubeflow Pipelines platform enables you to define an ML workflow, including all the components in the workflow (pipeline) and how they combine to form a directed graph. Note that pipeline components and Kubeflow components are two different concepts:
-
-- A Kubeflow component is one of the platforms, systems, services, or other tools distributed with Kubeflow.
-
-- A pipeline component is self-contained code that performs one step in an ML workflow, such as data preprocessing, data transformation, model training, etc. A pipeline component is analogous to a function, in that it has a name, parameters, return values, and a body.
-
-You must package pipeline components as Docker images. Pipeline components represent a specific program or entry point inside a container. The code for each pipeline component includes the client code and the runtime code. The client code talks to endpoints to submit jobs. Runtime code does the actual job and usually runs in the cluster.
-
-Each component in a pipeline executes independently. You must serialize (to strings or files) all the data pieces that you pass between the components so that the data can travel over the distributed network. You must then deserialize the data for use in the downstream component.
-
-The OSS Kubeflow Pipelines Platform UI enables you to configure and experiment with different runs of a pipeline and compare the results. The platform orchestrates runs of a pipeline launched from the pipelines UI. The UI also enables you to view the output artifacts and logs for each step in a pipeline run for evaluation purposes.
-
-The Machine Learning Metadata DB
---------------------------------
-
-As you build and experiment with pipelines, you will want to iterate in an effort to improve performance. The metadata management component of Kubeflow, called the Machine Learning Metadata DB (MLMD) enables users to understand and manage their machine learning (ML) workflows by tracking and managing the metadata that the workflows produce.
-
-In this context, metadata means information about contexts (experiments), executions (runs), models, datasets, and other artifacts. Artifacts are the files and objects that form the inputs and outputs of the components in your ML workflow. MLMD is the basis for providing the complete lineage for any kind of artifact.
+Kubeflow's model training operators play a vital role in simplifying and streamlining machine learning workflows. These operators are designed for popular frameworks like TensorFlow, PyTorch, MXNet, and XGBoost, allowing seamless integration and efficient resource management on Kubernetes. By leveraging these operators, data scientists and machine learning engineers can effectively manage the training process, monitor progress, and scale their experiments. With Kubeflow's operators, users gain the flexibility and power needed to tackle complex machine learning tasks while minimizing infrastructure complexities.
 
 Central Dashboard
 -----------------
 
-The central dashboard provides quick access to the Kubeflow components deployed in your cluster. It includes the following features:
+Central Dashboard serves as the hub for managing and navigating various components within the Kubeflow ecosystem. This user-friendly interface offers a comprehensive overview of your machine learning workflows, including experiment tracking, model training progress, and hyperparameter tuning results. The dashboard simplifies access to various tools and features, such as Jupyter notebooks, pipeline management, and resource allocation. By providing a unified view of your projects, the Central Dashboard enables data scientists and machine learning engineers to monitor and manage their experiments efficiently, thereby accelerating the development and deployment of machine learning models.
 
-- Shortcuts to common actions.
-- Lists of recent pipelines and notebooks.
-- Metrics that provide an overview of your jobs and cluster in one view.
-- A launchpad for the UIs of components running in the cluster, for example, pipelines, notebooks, and the hyperparameter tuning service.
-
-The Kubeflow UIs found in the dashboard include:
-
-- Home, a central dashboard for navigation between the Kubeflow components.
-- Pipelines for a Kubeflow Pipelines dashboard.
-- Notebook Servers for Jupyter notebooks.
-- Katib for hyperparameter tuning.
-- Manage Contributors for sharing user access across namespaces in the Kubeflow deployment.
-
-
+.. seealso::
+   - `Kubeflow Notebooks <https://www.kubeflow.org/docs/components/notebooks/>`__
+   - `Kubeflow Pipelines Introduction <https://www.kubeflow.org/docs/components/pipelines/introduction/>`__
+   - `Introduction to Katib <https://www.kubeflow.org/docs/components/katib/overview/>`__

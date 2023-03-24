@@ -10,18 +10,17 @@
 Welcome
 =======
 
-Open Source (OSS) Kubeflow enables you to operationalize much of an ML workflow on top of Kubernetes. It comprises a number of ML components and services; SDKs and APIs; integrated development environments (IDEs); and libraries for data science and machine learning.
+Data scientists often face the challenge to manually execute all the steps in a machine learning workflow, including moving and transforming data, training models, and promoting them to production. This is where Kubeflow comes in. Kubeflow is a free and open-source machine learning platform that streamlines the entire machine learning process, from data preparation and modeling to deployment. It uses pipelines to orchestrate complicated machine learning workflows and is dedicated to simplifying the deployments by providing a straightforward way to spin up the best possible open-source solutions.
 
-The Kubeflow Enterprise (KFE) distribution introduces important additional features to address gaps in OSS Kubeflow and commonly expressed needs of MLOps engineers and data scientists.
+Kubeflow is a powerful machine learning operations (MLOps) platform that can be used for experimentation, development, and production. Based on Kubeflow, we’ve developed vSphere Enterprise Kubeflow version, which is a VMware-sponsored initiative aimed at meeting the strict business and technical requirements for enterprise infrastructure. To address the challenges faced by enterprises, we've made several enhancements, including:
 
-- **Automation:** With KFE you can orchestrate an end-to-end ML workflow from your IDE. Start by tagging cells in Jupyter Notebooks to define pipeline steps, hyperparameter tuning, GPU usage, and metrics tracking. Click a button to define the necessary Kubernetes services and run a scalable ML pipeline and serve the best model. Or use the KFE Kale SDK to do all the above within your preferred IDE.
+- Better GPU utilization with GPU sharing management, enabling enterprises to optimize the machine learning workflows for better performance.
+- A rich offering of popular training models, covering a wide range of use cases from computer vision and natural language processing to time series forecasting and recommendation systems.
+- Optimized packaging and deployment user experience, making the deployment of  Kubeflow on vSphere easier and swifter.
 
-- **Portability:** KFE enables you to deploy and upgrade a Kubeflow environment using GitOps processes across all major public clouds and on-prem infrastructure. Move ML workflows seamlessly across clouds.
+Additionally, vSphere Enterprise Kubeflow includes several Kubeflow add-ons and community software to create an Enterprise-ready MLOps platform optimized for the vSphere platform. With vSphere Enterprise Kubeflow, enterprises can enjoy the benefits of an efficient and streamlined machine learning workflow, allowing them to achieve faster and more accurate results.
 
-- **Security:** KFE security features enable you to manage teams and user access via GitLab or any ID provider via Istio/OIDC. Isolate user ML data access within their own namespace while enabling notebook and pipeline collaboration in shared namespaces. Manage secrets and credentials securely, and efficiently.
-
-Docs
-----
+This documentation presents a comprehensive end-to-end workflow of using Kubeflow to build, train, and deploy a machine learning model, it will guide you through the entire process, from data preparation to model serving, and explain how various components of Kubeflow work together to streamline and enhance your machine learning workflow. Furthermore, we will provide best practices for deploying Kubeflow components locally, on-prem, and in the cloud. By the end of this documentation, you will have a better understanding of how to use Kubeflow to manage your machine learning projects, and you will be able to apply the additional features provided here to your own projects.
 
 .. toctree::
     :hidden:

@@ -228,3 +228,24 @@ Configure pod-security-policy tp give you access crete pod in TKG. Or you will c
   EOF
 
 Now you can use your own user profile to run your appliactions!
+
+---------------
+Troubleshooting
+---------------
+
+"""""""""""""""""""""""""""""""""""""""""""""""
+Restrict specified LDAP users to login Kubeflow
+"""""""""""""""""""""""""""""""""""""""""""""""
+
+Most of the time, we hope to specified LDAP users can login Kubeflow, not all LDAP users. Thus we need to add more filter restrictions when searching the directory. 
+As follow example, we only allow liuqi and juanl these 2 users to login Kubeflow. 
+
+.. code-block:: shell
+
+  kubectl edit configmap dex -n auth
+
+  ...
+      userSearch:
+        baseDN: ou=people,dc=vmware,dc=com
+        filter: "(objectclass=inetOrgPerson)(|(uid=liuqi)(uid=juanl))"
+        ...

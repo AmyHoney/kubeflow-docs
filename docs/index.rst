@@ -39,15 +39,6 @@ This documentation presents a comprehensive end-to-end workflow of using Kubeflo
     install/ubuntu
 
 .. toctree::
-    :caption: Integration
-    :hidden:
-
-    integration/index
-    integration/gitlab
-    integration/identity
-    integration/auth
-
-.. toctree::
     :caption: User Guide
     :hidden:
 
@@ -74,6 +65,8 @@ This documentation presents a comprehensive end-to-end workflow of using Kubeflo
     :hidden:
 
     operation-guide/index
+    operation-guide/gitlab
+    operation-guide/auth
 
 .. toctree::
     :caption: Internals

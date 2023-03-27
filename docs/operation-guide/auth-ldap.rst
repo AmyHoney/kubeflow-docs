@@ -12,51 +12,6 @@ The goal of Kubeflow integrate with VMware LDAP Server is that we can login Kube
 .. image:: ../_static/operation-guide-auth-ldap-goal02.png
 .. image:: ../_static/operation-guide-auth-ldap-goal03.png
 
-------------------------------------------
-Login Kubeflow 1.6.1 on vSphere with Tanzu
-------------------------------------------
-
-.. code-block:: shell
-
-    ## Supervisor Cluster info
-    export VSPHERE_SUPERVISOR_CLUSTER_IP=<The_IP_address_of_Supervisor_Cluster>
-    ## the namespace of the TKG you created
-    export VSPHERE_NAMESPACE=namespace-kubeflow
-    ## the cluster name of the TKG you created
-    export VSPHERE_TKGS=tkgs-kubeflow
-    ## vSphere username / password
-    export VSPHERE_USERNAME=administrator@vsphere.local
-    export KUBECTL_VSPHERE_PASSWORD='VMware01234!'
-    
-    kubectl vsphere login  \
-        --insecure-skip-tls-verify \ 
-        --server=${VSPHERE_SUPERVISOR_CLUSTER_IP} \ 
-        --vsphere-username ${VSPHERE_USERNAME} \ 
-        --tanzu-kubernetes-cluster-name ${VSPHERE_TKGS} \ 
-        --tanzu-kubernetes-cluster-namespace ${VSPHERE_NAMESPACE}
-    
-    kubectl config use-context ${VSPHERE_NAMESPACE}
-
-
-Access Kubeflow Central Dashboard need to get the IP address of Kubeflow Central Dashboard. When you set ``service_type`` to ``LoadBalancer``, run the command below and visit ``EXTERNAL-IP`` of ``istio-ingressgateway``.
-
-.. code-block:: shell
-
-    # Get Kubeflow UI IP, In this example, we should visit http://10.105.150.43:80
-    $ kubectl get svc istio-ingressgateway -n istio-system -o jsonpath='{.status.loadBalancer.ingress}.'
-
-    NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                                                                      AGE
-    istio-ingressgateway   LoadBalancer   198.55.183.13   10.105.150.43   15021:32377/TCP,80:30376/TCP,443:32552/TCP,31400:30021/TCP,15443:32383/TCP   17d
-
-Then you can use default user and password to login
-
-.. image:: ../_static/operation-guide-auth-ldap-login-defaultuser.png
-
-.. code-block:: shell
-
-    Email: user@example.com
-    Password: 12341234
-
 -------------------------
 Enable "Log in with LDAP"
 -------------------------
@@ -207,7 +162,7 @@ Check your own user profile
     kubectl get profile
     kubectl get serviceaccount,authorizationpolicies,rolebinding -n <namespace_name>
 
-Configure pod-security-policy tp give you access crete pod in TKG. Or you will create Notebook pod: fail, and get warning  "FailedCreate  1s (x2 over 1s)     statefulset-controller  create Pod test-01-0 in StatefulSet test-01 failed error: pods "test-01-0" is forbidden: PodSecurityPolicy: unable to admit pod: []"
+Configure pod-security-policy tp give you access create pod in TKG. Or you will create Notebook pod: fail, and get warning  "FailedCreate  1s (x2 over 1s)     statefulset-controller  create Pod test-01-0 in StatefulSet test-01 failed error: pods "test-01-0" is forbidden: PodSecurityPolicy: unable to admit pod: []"
 
 .. code-block:: shell
 
@@ -227,15 +182,15 @@ Configure pod-security-policy tp give you access crete pod in TKG. Or you will c
     name: system:serviceaccounts:<namespace_name>
   EOF
 
-Now you can use your own user profile to run your appliactions!
+Now you can use your own user profile to run your applications!
 
 ---------------
 Troubleshooting
 ---------------
 
-"""""""""""""""""""""""""""""""""""""""""""""""
-Restrict specified LDAP users to login Kubeflow
-"""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""
+Restrict specific LDAP users to login Kubeflow
+""""""""""""""""""""""""""""""""""""""""""""""
 
 Most of the time, we hope to specified LDAP users can login Kubeflow, not all LDAP users. Thus we need to add more filter restrictions when searching the directory. 
 As follow example, we only allow liuqi and juanl these 2 users to login Kubeflow. 
@@ -247,5 +202,5 @@ As follow example, we only allow liuqi and juanl these 2 users to login Kubeflow
   ...
       userSearch:
         baseDN: ou=people,dc=vmware,dc=com
-        filter: "(objectclass=inetOrgPerson)(|(uid=liuqi)(uid=juanl))"
+        filter: "(objectclass=inetOrgPerson)(|(uid=user1)(uid=user2))"
         ...

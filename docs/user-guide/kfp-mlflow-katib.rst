@@ -206,8 +206,8 @@ Define Katib hyperparameter tuninig operation.
     def create_katib_experiment_op(experiment_name, experiment_namespace, bucket, key):
         import os
         
-        os.environ["AWS_ACCESS_KEY_ID"] = 'minio'
-        os.environ["AWS_SECRET_ACCESS_KEY"] = 'QXD9A2VA67DNAH9J7HMGDVGUUD0SJD'
+        os.environ["AWS_ACCESS_KEY_ID"] = '<your_minio_access_key>'
+        os.environ["AWS_SECRET_ACCESS_KEY"] = '<your_minio_secret_key>'
         
         # Trial count specification.
         max_trial_count = 5

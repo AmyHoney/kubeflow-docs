@@ -31,12 +31,14 @@ This documentation presents a comprehensive end-to-end workflow of using Kubeflo
     introduction/mlops
 
 .. toctree::
-    :caption: Install
+    :caption: Install and Configure
     :hidden:
 
     install/index
     install/tkgs
     install/ubuntu
+    install/auth
+    install/gitlab
 
 .. toctree::
     :caption: User Guide
@@ -59,14 +61,6 @@ This documentation presents a comprehensive end-to-end workflow of using Kubeflo
     :hidden:
 
     use-cases/helmet
-
-.. toctree::
-    :caption: Operation Guide
-    :hidden:
-
-    operation-guide/index
-    operation-guide/gitlab
-    operation-guide/auth
 
 .. toctree::
     :caption: Internals

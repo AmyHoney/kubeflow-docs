@@ -1,8 +1,8 @@
 .. _user-guide-mlflow:
 
-======
-MLFlow
-======
+==============
+Model Registry
+==============
 
 This tutorial will guide you through the integration of MLFlow with Kubeflow using `Juju <https://juju.is/>`_ with `Microk8s <https://microk8s.io/>`_. This integration enables true automated model lifecycle management using MLFlow metrics and the MLFlow model registry.
 

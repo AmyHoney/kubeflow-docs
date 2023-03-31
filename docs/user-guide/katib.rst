@@ -1,6 +1,6 @@
-=====================
-Hyperparameter Tuning
-=====================
+======
+AutoML
+======
 
 We would use **Katib** for hyperparameter tuning. Katib is a Kubernetes-native project for automated machine learning (AutoML). 
 It supports hyperparameter tuning, early stopping and neural architecture search (NAS). It can tune hyperparameters of applications 

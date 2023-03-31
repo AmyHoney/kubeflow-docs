@@ -1,6 +1,6 @@
-=====
-Feast
-=====
+=============
+Feature Store
+=============
 
 
 Introduction to Feast

@@ -1,6 +1,6 @@
-===========
-ML Training
-===========
+==============
+Model Training
+==============
 
 .. toctree::
    :maxdepth: 1

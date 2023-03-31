@@ -4,9 +4,9 @@
 Model Serving with Kubeflow KServe
 ==================================
 
-----
-Goal
-----
+-----------
+Intrduction
+-----------
 
 The InferenceService custom resource is the primary interface that is used for deploying models on KServe. 
 Inside an InferenceService, users can specify multiple components that are used for handling inference requests. 
@@ -44,7 +44,7 @@ Learn more about torchscript here: `TorchScript <https://pytorch.org/tutorials/b
 Prepartion for Model Archiver
 """""""""""""""""""""""""""""
 
-Firstly, the data scientist should prepare 3 files:
+Firstly, we need to prepare 3 files:
 
 * helmet.pt: fine-tuning the model with your own data and save the parameters
 * helmet.torchscript.pt: a serialized file (.pt or .pth) should be a checkpoint in case of torchscript and state_dict in case of eager mode.
@@ -480,6 +480,10 @@ Once your InferenceService is applied ready to your cluster . Run the following 
     kubectl get inferenceservice helmet-detection-serving -o jsonpath='{.status.url}' | cut -d "/" -f 3
 
 
+"""""""""""""""""
+Perform Inference
+"""""""""""""""""
+
 Define a Test_bot for convenience, and determine host and session
 
 .. code-block:: python
@@ -570,14 +574,10 @@ Use your web browser to login to Kubeflow, and get Cookies: authservice_session 
                 session='MTY3MDM5OTkzNnxOd3dBTkZZeU5GSkhUVE5NVGtaRk1rMVpXVVpJVlV4SFFUWkpSRFpIVmxaQ05WaERTRlpRV2xoUFRWZEpXa2hTTjB4SVFrMDNSRkU9fFWl635XpDECJSOEnzFJLOugFqIiGbIniTh0uPs0BCW1')
 
     print(bot.readiness()) 
-    print(bot.predict('./2.jpg'))
+    print(bot.predict('./1.jpg'))
 
-    detections = json.loads(bot.predict('./2.jpg'))
+    detections = json.loads(bot.predict('./1.jpg'))
 
-
-"""""""""""""""""
-Perform Inference
-"""""""""""""""""
 
 .. code-block:: python
 
@@ -653,8 +653,21 @@ Perform Inference
         
         plt.show()
     
-    image_path = './2.jpg'
+    image_path = './1.jpg'
     visualize_detections(image_path, detections['predictions'][0])
+
+    
+.. image:: ../_static/helmet-kserve-02.png  
+
+"""""""""""""""""""""""
+Delete InferenceService 
+"""""""""""""""""""""""
+
+When you are done with your InferenceService, you can delete it by running the following.
+
+.. code-block:: bash
+
+    $ kubectl delete inferenceservice 'yourinferenceservice' -n 'yournamespace'
 
 
 """""""""""

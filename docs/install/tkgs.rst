@@ -1,3 +1,5 @@
+.. _install-tkgs:
+
 ======================================
 Install Kubeflow on vSphere with Tanzu
 ======================================

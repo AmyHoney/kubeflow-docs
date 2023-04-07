@@ -38,7 +38,6 @@ This documentation presents a comprehensive end-to-end workflow of using Kubeflo
     install/tkgs
     install/ubuntu
     install/auth
-    install/gitlab
 
 .. toctree::
     :caption: User Guide

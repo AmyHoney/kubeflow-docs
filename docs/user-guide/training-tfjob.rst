@@ -12,7 +12,6 @@ This section will guide you through creating and managing a ``TFJob`` CR on Kube
 Prerequisites
 -------------
 
-* Deployed Kubeflow instance, and access to Kubeflow dashboard. For sample Kubeflow deployment on Nimbus (only for VMware internal users) refer to :ref:`install-ubuntu`. More details on Kubeflow can be found here `Documentation | Kubeflow <https://www.kubeflow.org/docs/>`__.
 * Deployed training-operator. 
 
 ------------

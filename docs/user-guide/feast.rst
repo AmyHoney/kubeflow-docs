@@ -20,7 +20,6 @@ Prerequisites
 
 Make sure following prerequisites are fulfilled before starting this experiment:
 
-* :ref:`install-ubuntu`
 * You can access the kubeflow dashboard.
 
 

@@ -36,7 +36,6 @@ This documentation presents a comprehensive end-to-end workflow of using Kubeflo
 
     install/index
     install/tkgs
-    install/ubuntu
     install/auth
 
 .. toctree::

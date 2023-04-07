@@ -31,7 +31,6 @@ The following diagram outlines ML workflow presented in this guide. Major pipeli
 Prerequisites
 -------------
 
-* Deployed Kubeflow instance including Katib, and access to Kubeflow dashboard. For sample Kubeflow deployment on Nimbus (only for VMware internal users) refer to :ref:`install-ubuntu`. More details on Kubeflow can be found here `Documentation | Kubeflow <https://www.kubeflow.org/docs/>`__.
 * Deployed MLFlow. For deployment of Charmed MLFlow refer to :ref:`user-guide-mlflow`.
 * Familiarity with Python, Docker, Jupyter notebooks.
 

@@ -27,7 +27,6 @@ Prerequisites
 
 Make sure following prerequisites are fulfilled before starting this experiment:
 
-* :ref:`install-ubuntu`
 * Familiar with :ref:`kubeflow_pipelines`
 * Install ``helm`` CLI following `official documentations <https://helm.sh/docs/intro/install/>`__
 
@@ -106,9 +105,6 @@ Create the pipeline with a Spark job
 ------------------------------------
 
 Now, it's time to get started with concreate coding work to create a pipeline with a Spark job.
-
-Go to the Kubeflow UI in your browser. (If you follow the guide :ref:`install-ubuntu`, you can access Kubeflow UI by going to 
-``http://10.64.140.43.nip.io``.) Connect or start a Notebook Server, and create a ``.ipynb`` file.
 
 .. _workflow overview:
 

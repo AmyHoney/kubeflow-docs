@@ -3,8 +3,8 @@ Feature Store
 =============
 
 
-Introduction to Feast
-=====================
+Introduction
+============
 
 Feast (Feature Store) is a customizable operational data system that re-uses existing infrastructure to manage and serve machine learning features to models.
 
@@ -14,65 +14,179 @@ Feast (Feature Store) is a customizable operational data system that re-uses exi
 
 * **Consistency between training and serving**: The separation between data scientists and engineering teams often lead to the re-development of feature transformations when moving from training to online serving. Inconsistencies that arise due to discrepancies between training and serving implementations frequently leads to a drop in model performance in production.
 
+.. image:: ../_static/user-guide-feast-introduction.jpg
 
-Prerequisites
-=============
+Feast helps ML platform teams with DevOps experience productionize real-time models. Feast can also help these teams build towards a feature platform that improves collaboration between engineers and data scientists.
 
-Make sure following prerequisites are fulfilled before starting this experiment:
-
-* You can access the kubeflow dashboard.
+For more detailed information about Feast, please refer to `Feast official website <https://docs.feast.dev/>`_, and want to know how it works, please refer to `its source code <https://github.com/feast-dev/feast>`_. 
 
 
-Obtain MinIO relative information
-=================================
+Get started
+===========
 
-If you have already installed Kubeflow, and MinIO has installed together on your cluster.
-Let's obtain MinIO endpoint url, access and secret key for authentication. The MinIO relative information will be used later. In your terminal, run following commands:
+In this tutorial, we'll use Feast to share features for training offline models, do online model inference for a ride-sharing driver satisfaction prediction model. Besides, we first put data into S3 object (MinIO) conveniently, and store feature into S3 object to share conveniently.
+
+Grab the `code examples <https://github.com/feast-dev/feast-workshop/tree/main/module_0>`_ to learn how to use feast to help development.
+
+* Setting up a feature repo using MinIO S3 bucket about registry for offline features to train model.
+* Make predictions using online features by `SQLite <https://docs.feast.dev/reference/online-stores/sqlite>`_.
+
+
+Upload data to MinIO bucket
+---------------------------
+
+If you already have the MinIO storage, you can directly skip the MinIO deployment step, and follow the next steps to upload data to MinIO. If not, we also provide a standalone MinIO deployment guide on the kubernetes clusters. You can use the following YAML file and apply them in your terminal.
+
+.. code-block:: shell
+    
+  # create pvc, MinIO service, MinIO deployment if you have not MinIO storage
+  cat << EOF | kubectl apply -f -
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    # This name uniquely identifies the PVC. Will be used in deployment below.
+    name: minio-pv-claim
+    labels:
+      app: minio-storage-claim
+    annotations:
+      volume.beta.kubernetes.io/storage-class: pacific-storage-policy # replace it with yourself environment storage-class
+  spec:
+    # Read more about access modes here: http://kubernetes.io/docs/user-guide/persistent-volumes/#access-modes
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: pacific-storage-policy
+    resources:
+      # This is the request for storage. Should be available in the cluster.
+      requests:
+        storage: 10Gi
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: minio-service
+  spec:
+    type: LoadBalancer
+    ports:
+      - port: 9000
+        name: http
+        targetPort: 9000
+        protocol: TCP
+      - port: 9001
+        name: console
+        targetPort: 9001
+        protocol: TCP  
+    selector:
+      app: minio
+  ---
+  apiVersion: apps/v1 #  for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+  kind: Deployment
+  metadata:
+    # This name uniquely identifies the Deployment
+    name: minio-deployment
+  spec:
+    selector:
+      matchLabels:
+        app: minio
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          # Label is used as selector in the service.
+          app: minio
+      spec:
+        # Refer to the PVC created earlier
+        volumes:
+        - name: storage
+          persistentVolumeClaim:
+            # Name of the PVC created earlier
+            claimName: minio-pv-claim
+        containers:
+        - name: minio
+          # Pulls the default Minio image from Docker Hub
+          image: minio/minio:latest
+          args:
+          - server
+          - --console-address
+          - :9001
+          - /storage
+          env:
+          # Minio access key and secret key
+          - name: MINIO_ACCESS_KEY
+            value: "minioadmin"
+          - name: MINIO_SECRET_KEY
+            value: "minioadmin"
+          ports:
+          - containerPort: 9000
+          - containerPort: 9001
+          # Mount the volume into the pod
+          volumeMounts:
+          - name: storage # must match the volume name, above
+            mountPath: "/storage"
+  EOF
+
+This step uploads data to MinIO buckets. You need to find the MinIO ``endpoint_url``, ``accesskey``, ``secretkey`` before upload using the following commands in the terminal.
 
 .. code-block:: shell
 
     # get the endpoint url for MinIO
-    $ microk8s kubectl get svc minio -n kubeflow -o jsonpath='{.spec.clusterIP}'
+    $ kubectl get svc minio -n kubeflow -o jsonpath='{.spec.clusterIP}'
     
-    # get the secret name for Minio. your-namespace is admin for this microk8s cluster.
-    $ microk8s kubectl get secret -n <your-namespace> | grep minio
-
+    # get the secret name for Minio. your-namespace is admin for this cluster.
+    $ kubectl get secret -n <your-namespace> | grep minio
     # get the access key for MinIO
-    $ microk8s kubectl get secret <minio-secret-name> -n <your-namespace> -o jsonpath='{.data.accesskey}' | base64 -d
-
+    $ kubectl get secret <minio-secret-name> -n <your-namespace> -o jsonpath='{.data.accesskey}' | base64 -d
     # get the secret key for MinIO
-    $ microk8s kubectl get secret <minio-secret-name> -n <your-namespace> -o jsonpath='{.data.secretkey}' | base64 -d
+    $ kubectl get secret <minio-secret-name> -n <your-namespace> -o jsonpath='{.data.secretkey}' | base64 -d
+
+Now you can create a notebook refer to :ref:`user-guide-notebooks` to upload data to MinIO bucket using MinIO parameters obtained before to update the MinIO parameters.
+
+You need to install ``boto3`` dependency package in the notebook server created before, and run the follow python code to upload model files.
+
+.. code-block:: shell
+
+    !pip install boto3 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 
-Getting started with Feast
-==========================
+We've made some dummy data for this workshop. You need to create ``infra`` folder and download `driver_stats.parquet <https://github.com/AmyHoney/feast-example/blob/master/01_feature_repo_local/infra/driver_stats.parquet>`_ file, put ``driver_stats.parquet`` file into ``infra`` folder. Let's upload data to MinIO.
 
-Now, it’s time to get started Feast.
+.. code-block:: shell
 
-Go to the Kubeflow UI in your browser. (If you follow the guide Install Kubeflow on Nimbus, you can access Kubeflow UI by going to ``http://10.64.140.43.nip.io``.) Connect or start a Notebook Server, and create a ``.ipynb`` file.
+    import os
+    from urllib.parse import urlparse
+    import boto3
+    # Update these parameters about your environment
+    os.environ["FEAST_S3_ENDPOINT_URL"] = "http://<your_minio_endpoint_url>:9000"  # repalce it to your MinIO endpoint url
+    os.environ["AWS_ACCESS_KEY_ID"] = "<your_minio_access_key>" # repalce it to your MinIO access key
+    os.environ["AWS_SECRET_ACCESS_KEY"] = "<your_minio_secret_key>"  # repalce it to your MinIO secret key
+ 
+    s3 = boto3.resource('s3',
+                        endpoint_url=os.getenv("FEAST_S3_ENDPOINT_URL"),
+                        verify=False)
+    # Create a bucket
+    bucket_name='featurestore'
+    s3.create_bucket(Bucket=bucket_name)
+    # Check if the newly bucket exists
+    print(list(s3.buckets.all()))
+    # Upload data file to the newly bucket
+    bucket = s3.Bucket(bucket_name)
+    bucket_path = "infra"
+    bucket.upload_file("infra/driver_stats.parquet", os.path.join(bucket_path, "driver_stats.parquet"))
+    # check files
+    for obj in bucket.objects.filter(Prefix=bucket_path):
+        print(obj.key)
 
-This guide provides the necessary resources to install Feast alongside Kubeflow, describes the usage of Feast with Kubeflow components, and provides examples that users can follow to test their setup.
 
-Grab the `code examples <https://github.com/AmyHoney/feast-example/blob/master/03_feature_repo_s3_offline_sqlite_online/s3_online_explore_date.ipynb>`_ to know feast and use it: 
+Install Feast and other's libraries
+-----------------------------------
 
-* Setting up a feature repo using MinIO S3 bucket about registry for offline features to train model.
-
-* Make predictions using online features by `SQLite <https://docs.feast.dev/reference/online-stores/sqlite>`_.
-
-
-----------------
-Installing Feast
-----------------
-
-Before we get started, first install some dependencies and Feast:
+Before we develop deeply, first install some dependencies and Feast in the notebook server.
 
 .. code-block:: shell
 
     !pip install scikit-learn
     !pip install "numpy>=1.16.5,<1.23.0"
     !pip install pyarrow
-    !pip install fastparquet
-    !pip install boto3
     !pip install s3fs
     !pip install feast==0.29.0
 
@@ -83,11 +197,11 @@ Before we get started, first install some dependencies and Feast:
     # reference: https://github.com/feast-dev/feast/issues/3538
     !pip install typeguard==2.13.3
 
-------------------
+
 Exploring the data
 ------------------
 
-We've made some dummy data for this workshop. You need to create ``infra`` folder and download `driver_stats.parquet <https://github.com/AmyHoney/feast-example/blob/master/01_feature_repo_local/infra/driver_stats.parquet>`_ file, put ``driver_stats.parquet`` file into ``infra`` folder. Let's dive into what the data looks like.
+ Let's dive into what the data looks like using the data `./infra/driver_stats.parquet <https://github.com/AmyHoney/feast-example/blob/master/01_feature_repo_local/infra/driver_stats.parquet>`_ downloaded before.
 
 .. code-block:: shell
 
@@ -99,48 +213,11 @@ We've made some dummy data for this workshop. You need to create ``infra`` folde
 
 This is a set of time-series data with driver_id as the primary key (representing the driver entity) and event_timestamp as showing when the event happened.
 
------------------------------
-Upload data into MinIO bucket
------------------------------
 
-You need to use your MinIO parameters obtained before to update the MinIO parameters, create a bucket for feast and upload data files to bucket.
-
-.. code-block:: shell
-
-    import os
-    from urllib.parse import urlparse
-    import boto3
-
-    # Update these parameters about your environment
-    os.environ["FEAST_S3_ENDPOINT_URL"] = "http://<your_minio_endpoint_url>:9000"
-    os.environ["AWS_ACCESS_KEY_ID"] = "<your_minio_access_key>"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "<your_minio_secret_key>"
-
-    s3 = boto3.resource('s3',
-                        endpoint_url=os.getenv("FEAST_S3_ENDPOINT_URL"),
-                        verify=False)
-
-    # Create a bucket
-    bucket_name='featurestore'
-    s3.create_bucket(Bucket=bucket_name)
-
-    # Check if the newly bucket exists
-    print(list(s3.buckets.all()))
-
-    # Upload data file to the newly bucket
-    bucket = s3.Bucket(bucket_name)
-    bucket_path = "infra"
-    bucket.upload_file("infra/driver_stats.parquet", os.path.join(bucket_path, "driver_stats.parquet"))
-
-    # check files
-    for obj in bucket.objects.filter(Prefix=bucket_path):
-        print(obj.key)
-
--------------------------------------------
 Setup the feature repo to register features
 -------------------------------------------
 
-Let's setup a feature repo for the feast project.
+Let's setup a feature repo for the feast project follow the next steps. Meanwhile, if you want to know more basic knowledges, such as a simple feature repo by yourself, please refer to `feast-quick-start <https://docs.feast.dev/getting-started/quickstart>`.
 
 ^^^^^^^^^^^^^^^^^^^^^^
 Setup the feature repo
@@ -154,19 +231,16 @@ New a python file like below screenshot to write **data_sources.py** file to loa
 
     from feast import FileSource
     import s3fs
-
     bucket_name = "featurestore"
     file_name = "driver_stats.parquet"
-    s3_endpoint = "http://<your_minio_endpoint_url>:9000"
-
-    s3 = s3fs.S3FileSystem(key='<your_minio_access_key>',
-                        secret='<your_minio_secret_key>',
+    s3_endpoint = "http://<your_minio_endpoint_url>:9000" # repalce it to your MinIO endpoint url
+    s3 = s3fs.S3FileSystem(key='<your_minio_access_key>', # repalce it to your MinIO access key
+                        secret='<your_minio_secret_key>', # repalce it to your MinIO secret key
                         client_kwargs={'endpoint_url': s3_endpoint}, use_ssl=False)
-
     driver_stats = FileSource(
         name="driver_stats_source",
-        path="s3://featurestore/infra/driver_stats.parquet",  # TODO: Replace with your bucket
-        s3_endpoint_override="http://<your_minio_endpoint_url>:9000", # TODO: Replace with your MinIO URL
+        path="s3://featurestore/infra/driver_stats.parquet",  # Replace it with your bucket
+        s3_endpoint_override="http://<your_minio_endpoint_url>:9000", # repalce it to your MinIO endpoint url
         timestamp_field="event_timestamp",
         created_timestamp_column="created",
         description="A table describing the stats of a driver based on hourly logs",
@@ -244,7 +318,7 @@ New a YAML file to write **feature_store.yaml** contains a demo setup configurin
 
   project: feast_demo_minio
   provider: local
-  registry: s3://featurestore/infra/registry.pb # TODO: Replace with your bucket
+  registry: s3://featurestore/infra/registry.pb # replace it with your bucket
   online_store:
     type: sqlite
     path: data/online_store.db
@@ -324,11 +398,12 @@ You can now run Feast CLI commands to verify Feast knows about your features and
     driver_hourly_stats  {'driver'}  FeatureView
 
 
----------------------------------------------
-Fetch offline features from S3 to train model
----------------------------------------------
 
-``get_historical_features`` is an API by which you can retrieve features (by referencing features directly or via feature services). It will under the hood manage point-in-time joins and avoid data leakage to generate training datasets.
+
+Fetch offline features to train model
+-------------------------------------
+
+Let's use ``get_historical_features`` API, it can retrieve features (by referencing features directly or via feature services). It will under the hood manage point-in-time joins and avoid data leakage to generate training datasets.
 
 You need to do ``wget`` `driver_orders.csv <https://github.com/AmyHoney/feast-example/blob/master/03_feature_repo_s3_offline_sqlite_online/driver_orders.csv>`_ data.
 
@@ -423,7 +498,7 @@ The output should look like this and like below screenshot instead of the output
 
 .. image:: ../_static/user-guide-feast-model-download.png
 
---------------------------------------------
+
 Fetch online features from SQLite to predict
 --------------------------------------------
 
@@ -479,6 +554,23 @@ Now we can retrieve these materialized features from SQLite by directly using th
   make_drivers_prediction() 
 
 The result output is ``Prediction for best driver id: 1003``
+
+
+Troubleshooting
+===============
+
+TypeError when execute 'feast plan' or 'feast apply'
+------------------------------------------------------
+
+If you executing 'feast plan'  or 'feast apply' fails,  got "TypeError: the 'package' argument is required to perform a relative import for '.ipynb_checkpoints.data_sources-checkpoint' or '.jupyter.jupyter_lab_config'".
+
+You can remove such files, after that, 'feast plan'  or 'feast apply' will get executed successfully.
+
+.. code-block:: shell
+
+    !rm -rf .ipynb_checkpoints
+    !rm -rf .jupyter
+
 
 .. seealso::
 
